@@ -1,0 +1,140 @@
+{
+  "devices": [
+    {
+      "name": "Dipositivo 01",
+      "quantity": 4,
+      "image": "https://download.logo.wine/logo/Raspberry_Pi/Raspberry_Pi-Logo.wine.png",
+      "lastTime": "Há 07 meses",
+      "consumed": true
+    },
+    {
+      "name": "Dipositivo 02",
+      "quantity": 7,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Arduino_Logo.svg/1024px-Arduino_Logo.svg.png",
+      "lastTime": "Há 03 meses",
+      "consumed": false
+    },
+    {
+      "name": "Dipositivo 03",
+      "quantity": 1,
+      "image": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "lastTime": "Há 02 meses",
+      "consumed": true
+    },
+    {
+      "name": "Dipositivo 04",
+      "quantity": 4,
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Ruby_logo.svg/1024px-Ruby_logo.svg.png",
+      "lastTime": "Há 05 meses",
+      "consumed": false
+    }
+  ],
+  "products": [
+    {
+      "name": "Chocolate Hersheys",
+      "quantity": 1,
+      "icon": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "image": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "expirationdate": "01/02/2021",
+      "lastTime": "Há 03 meses",
+      "consumed": true,
+      "manufacturingdate": "17/12/2021",
+      "createdAt": "31/09/2021",
+      "nutritionalinfo": {
+        "portion": "100g",
+        "carbohydrate": "1g",
+        "proteins": "10g",
+        "totalfat": "60g",
+        "saturedfat": "15g",
+        "transfat": "15g",
+        "sodium": "100mg",
+        "dietaryfiber": "5g"
+      }
+    },
+    {
+      "name": "Toddyinho",
+      "quantity": 2,
+      "expirationdate": "01/02/2021",
+      "icon": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "image": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "lastTime": "Há 01 meses",
+      "consumed": false,
+      "manufacturingdate": "17/12/2021",
+      "createdAt": "14/07/2021",
+      "nutritionalinfo": {
+        "portion": "100g",
+        "carbohydrate": "1g",
+        "proteins": "10g",
+        "totalfat": "60g",
+        "saturedfat": "15g",
+        "transfat": "15g",
+        "sodium": "100mg",
+        "dietaryfiber": "5g"
+      }
+    },
+    {
+      "name": "Linguiça",
+      "quantity": 5,
+      "icon": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "image": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "lastTime": "Há 07 meses",
+      "consumed": true,
+      "createdAt": "24/08/2021",
+      "manufacturingdate": "17/12/2021",
+      "expirationdate": "01/02/2021",
+      "nutritionalinfo": {
+        "portion": "100g",
+        "carbohydrate": "1g",
+        "proteins": "10g",
+        "expirationdate": "01/02/2021",
+        "totalfat": "60g",
+        "saturedfat": "15g",
+        "transfat": "15g",
+        "sodium": "100mg",
+        "dietaryfiber": "5g"
+      }
+    },
+    {
+      "name": "Leite 2ltr.",
+      "quantity": 10,
+      "icon": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "image": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "manufacturingdate": "17/12/2021",
+      "expirationdate": "01/02/2021",
+      "lastTime": "Há 03 meses",
+      "consumed": true,
+      "createdAt": "03/06/2021",
+      "nutritionalinfo": {
+        "portion": "100g",
+        "carbohydrate": "1g",
+        "proteins": "10g",
+        "totalfat": "60g",
+        "saturedfat": "15g",
+        "transfat": "15g",
+        "sodium": "100mg",
+        "dietaryfiber": "5g"
+      }
+    },
+    {
+      "name": "Arroz",
+      "quantity": 11,
+      "icon": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "image": "https://pribellafronte.com.br/static/9e76a8500f6c8642acc40ecc6555b5ca/evolucao-da-marca-lego-capa.jpg",
+      "lastTime": "Há 01 meses",
+      "manufacturingdate": "17/12/2021",
+      "expirationdate": "01/02/2021",
+      "consumed": true,
+      "createdAt": "01/02/2021",
+      "nutritionalinfo": {
+        "portion": "100g",
+        "carbohydrate": "1g",
+        "proteins": "10g",
+        "totalfat": "60g",
+        "saturedfat": "15g",
+        "transfat": "15g",
+        "sodium": "100mg",
+        "dietaryfiber": "5g"
+      }
+    }
+  ]
+}
