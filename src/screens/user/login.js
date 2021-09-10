@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import {
-  StyleSheet, View, Text, StatusBar, Dimensions, SafeAreaView,
+  StyleSheet, View, Text, StatusBar, Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
-import { OnboardingInput } from '../components/onboardingInput';
-import OnboardingButton from '../components/onboardingButton';
-import axios from '../service/axios';
-import * as actions from '../redux/modules/auth/actions';
+import { OnboardingInput } from '../../components/onboardingInput';
+import OnboardingButton from '../../components/onboardingButton';
+import axios from '../../service/axios';
+import * as actions from '../../redux/modules/auth/actions';
 
 const Background = ({ children }) => (
   <LinearGradient
@@ -25,9 +25,8 @@ export default function Login({ route, navigation }) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const login = async (event) => {
+  async function login() {
     try {
-      const { email, password } = event;
       const response = await axios.post('/auth/login', {
         email,
         password,
@@ -35,13 +34,13 @@ export default function Login({ route, navigation }) {
       if (response.status === 200) {
         await dispatch(actions.loginSuccess({ ...response.data }));
         axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
-        console.log(state);
+        console.info('Succefully logged in!');
       }
     } catch (e) {
       console.log(e);
       dispatch(actions.loginFailure());
     }
-  };
+  }
 
   return (
     <Background>

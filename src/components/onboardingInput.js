@@ -6,11 +6,11 @@ import {
 
 // eslint-disable-next-line import/prefer-default-export
 export function OnboardingInput({
-  text, secureTextEntry, value, onChangeText, style,
+  text, secureTextEntry, value, onChangeText, style, labelStyle,
 }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.labelInput}>{text}</Text>
+      <Text style={[styles.labelInput, labelStyle]}>{text}</Text>
       <TextInput
         style={[styles.inputOnboarding, style]}
         value={value}
@@ -25,27 +25,27 @@ const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
     alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
     marginTop: 10,
     minWidth: width * 0.8,
   },
+  inputOnboarding: {
+    backgroundColor: 'rgba(0, 210, 134, 0.5)',
+    borderColor: 'white',
+    borderRadius: 30,
+    borderWidth: 2,
+    color: 'white',
+    minWidth: width * 0.8,
+    padding: 3,
+    paddingLeft: 8,
+
+  },
   labelInput: {
+    alignSelf: 'flex-start',
     color: 'white',
     fontWeight: '500',
-    alignSelf: 'flex-start',
     marginBottom: 5,
-  },
-  inputOnboarding: {
-    borderColor: 'white',
-    borderWidth: 2,
-    borderRadius: 30,
-    color: 'white',
-    padding: 3,
-    minWidth: width * 0.8,
-    paddingLeft: 8,
-    backgroundColor: 'rgba(0, 210, 134, 0.5)',
-
   },
 });

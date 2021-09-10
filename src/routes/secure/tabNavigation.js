@@ -1,16 +1,22 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ProductsNavigation from './productsNavigation';
-import ExpiredProducts from '../../screens/expiredProducts';
+import ExpiredProducts from '../../screens/products/expiredProducts';
+import DeviceNavigation from './deviceNavigation';
+import RegisterDevice from '../../screens/devices/registerDevice';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigation() {
   return (
-    <Tab.Navigator screenOptions={
+    <Tab.Navigator
+      screenOptions={
       {
+        headerShown: false,
         headerTintColor: 'black',
         tabBarActiveTintColor: '#30c735',
       }
@@ -21,7 +27,7 @@ export default function TabNavigation() {
         component={ProductsNavigation}
         options={
         {
-          title: 'Produtos',
+
           tabBarIcon: ({ size, focused }) => (
             <MaterialCommunityIcons name="format-list-bulleted" color={focused ? '#30c735' : 'grey'} size={size} />
           ),
@@ -39,23 +45,44 @@ export default function TabNavigation() {
           ),
         }}
       />
-      <Tab.Screen
-        name="devices"
-        component={ExpiredProducts}
-        options={{
-          title: 'Dispositivos',
-          tabBarLabel: 'Dispositivos',
-          tabBarIcon: ({ size, focused }) => (
-            <MaterialCommunityIcons name="devices" color={focused ? '#30c735' : 'grey'} size={size} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create(
-  {
-    tabStyle: {},
-  },
-);
+export function TabDevice() {
+  return (
+    <Tab.Navigator
+      screenOptions={
+      {
+        headerShown: false,
+        headerTintColor: 'black',
+        tabBarActiveTintColor: '#30c735',
+      }
+    }
+    >
+      <Tab.Screen
+        name="devices"
+        component={DeviceNavigation}
+        options={{
+          title: 'Dispostivos',
+          tabBarLabel: 'Dispostivos',
+          tabBarIcon: ({ size, focused }) => (
+            <MaterialIcons name="devices" color={focused ? '#30c735' : 'grey'} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="addDevices"
+        component={RegisterDevice}
+        options={{
+          tabBarLabel: 'Adicionar Dispositivo',
+          tabBarIcon: ({ size, focused }) => (
+            <MaterialIcons name="add" color={focused ? '#30c735' : 'grey'} size={size} />
+          ),
+
+        }}
+
+      />
+    </Tab.Navigator>
+  );
+}

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import {
   createDrawerNavigator, DrawerItem, DrawerContentScrollView, DrawerItemList,
@@ -5,8 +6,9 @@ import {
 import { useDispatch } from 'react-redux';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated from 'react-native-reanimated';
-import TabNavigation from './tabNavigation';
+import TabNavigation, { TabDevice } from './tabNavigation';
 import * as actions from '../../redux/modules/auth/actions';
+import Profile from '../../screens/user/profile';
 
 const Drawer = createDrawerNavigator();
 
@@ -15,6 +17,7 @@ export default function InternalNavigation() {
 
   const logout = () => {
     dispatch(actions.logout());
+    console.info('Exit Succefully!');
   };
 
   function DrawerContent(props) {
@@ -23,7 +26,7 @@ export default function InternalNavigation() {
         <DrawerItemList {...props} />
         <Animated.View />
         <DrawerItem
-          label="logout"
+          label="Logout"
           onPress={() => logout()}
           icon={
             ({ size, focused }) => (
@@ -40,12 +43,12 @@ export default function InternalNavigation() {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={
-        { headerShown: false }
+        { headerShown: true }
     }
     >
       <Drawer.Screen
         name="Perfil"
-        component={TabNavigation}
+        component={Profile}
         options={
            {
              drawerIcon: ({ size, focused }) => (
@@ -55,7 +58,7 @@ export default function InternalNavigation() {
           }
       />
       <Drawer.Screen
-        name="Home"
+        name="Produtos"
         component={TabNavigation}
         options={
            {
@@ -65,6 +68,19 @@ export default function InternalNavigation() {
                  color={focused ? '#30c735' : 'grey'}
                  size={size}
                />
+             ),
+           }
+          }
+      />
+      <Drawer.Screen
+        name="Devices"
+        component={TabDevice}
+        options={
+           {
+             headerShown: true,
+             drawerIcon: ({ size, focused }) => (
+               <MaterialCommunityIcons name="devices" color={focused ? '#30c735' : 'grey'} size={size} />
+
              ),
            }
           }

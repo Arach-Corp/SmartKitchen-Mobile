@@ -34,5 +34,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react-native/no-raw-text': 'off',
     'prop-types': 'off',
+    'react-native/no-unused-styles': 'off',
+    'react/prop-types': 'off',
   },
 };

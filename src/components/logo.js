@@ -13,8 +13,8 @@ export function Logo({ style }) {
 
 const styles = StyleSheet.create({
   logoStyle: {
-    fontWeight: 'bold',
-    fontSize: 40,
     color: 'white',
+    fontSize: 40,
+    fontWeight: 'bold',
   },
 });

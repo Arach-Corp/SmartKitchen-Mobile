@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-export default function SplashScreen() {
+export default function Profile() {
   return (
     <View>
-      <Text>Loading...</Text>
+      <Text />
     </View>
   );
 }

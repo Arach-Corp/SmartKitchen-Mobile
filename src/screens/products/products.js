@@ -20,7 +20,7 @@ export default function Products({ navigation }) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#e0e0e0',
     flex: 1,
     flexDirection: 'column',
   },
