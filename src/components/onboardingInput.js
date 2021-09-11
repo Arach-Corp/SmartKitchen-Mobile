@@ -6,7 +6,7 @@ import {
 
 // eslint-disable-next-line import/prefer-default-export
 export function OnboardingInput({
-  text, secureTextEntry, value, onChangeText, style, labelStyle,
+  text, secureTextEntry, value, onChangeText, style, labelStyle, multiline, numberOfLines,
 }) {
   return (
     <View style={styles.container}>
@@ -15,6 +15,8 @@ export function OnboardingInput({
         style={[styles.inputOnboarding, style]}
         value={value}
         onChangeText={onChangeText}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
         secureTextEntry={secureTextEntry}
       />
     </View>
