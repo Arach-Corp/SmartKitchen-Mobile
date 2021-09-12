@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet, SafeAreaView, Text, Alert, TouchableOpacity, View,
 } from 'react-native';
@@ -7,6 +7,7 @@ import OnboardingButton from '../../components/onboardingButton';
 
 export default function DeviceDetails({ route, navigation }) {
   const { item } = route.params;
+  const { itemState, setItemState } = useState();
 
   async function deleteItem() {
     try {
@@ -23,6 +24,28 @@ export default function DeviceDetails({ route, navigation }) {
 
       const newDevices = devicesStorage.filter((device) => device.id !== item.id);
       storeData(newDevices);
+      navigation.goBack();
+    } catch (e) {
+      Alert.alert(e);
+    }
+  }
+
+  async function toggleMain() {
+    const storeData = async (value) => {
+      try {
+        await AsyncStorage.setItem('devices', JSON.stringify(value));
+      } catch (e) {
+        console.info(e);
+      }
+    };
+
+    try {
+      let deviceStorage = await AsyncStorage.getItem('devices');
+      deviceStorage = JSON.parse(deviceStorage);
+      const deviceIndex = deviceStorage.findIndex((device) => device.id === item.id);
+      deviceStorage[deviceIndex].principal = !deviceStorage[deviceIndex].principal;
+
+      storeData(deviceStorage);
       navigation.goBack();
     } catch (e) {
       Alert.alert(e);
@@ -52,17 +75,50 @@ export default function DeviceDetails({ route, navigation }) {
           </Text>
         </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <OnboardingButton
-          text="Excluir dispositivo"
-          onPress={() => deleteItem()}
-        />
+      <View style={styles.buttons}>
+
+        <View style={styles.buttonContainer}>
+          <OnboardingButton
+            text={itemState ? 'Tornar secundário' : 'Tornar principal'}
+            onPress={() => toggleMain()}
+            style={styles.button}
+          />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <OnboardingButton
+            text="Editar dispositivo"
+            onPress={() => navigation.navigate('editDevice', { item, edit: true })}
+            style={[styles.button, { color: 'orange' }]}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <OnboardingButton
+            text="Excluir dispositivo"
+            onPress={() => deleteItem()}
+            style={[styles.button, { color: 'red' }]}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 30,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginHorizontal: 60,
+  },
+  buttons: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginTop: 15,
+  },
   container: {
     alignItems: 'center',
     flexDirection: 'column',

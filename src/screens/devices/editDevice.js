@@ -6,11 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { OnboardingInput } from '../../components/onboardingInput';
 import OnboardingButton from '../../components/onboardingButton';
 
-export default function RegisterDevice({ navigation }) {
+export default function EditDevice({ route, navigation }) {
   const [description, setDescription] = useState('');
   const [key, setKey] = useState('');
+  const { item } = route.params;
 
-  async function registerDevice() {
+  async function editDevice() {
     const storeData = async (value) => {
       try {
         await AsyncStorage.setItem('devices', JSON.stringify(value));
@@ -20,22 +21,16 @@ export default function RegisterDevice({ navigation }) {
     };
 
     try {
-      let devices = await AsyncStorage.getItem('devices') || [];
-      devices = devices ? JSON.parse(devices) : [];
+      let deviceStorage = await AsyncStorage.getItem('devices');
+      deviceStorage = JSON.parse(deviceStorage);
+      const deviceIndex = deviceStorage.findIndex((device) => device.id === item.id);
+      deviceStorage[deviceIndex].descricao = description;
+      deviceStorage[deviceIndex].key = key;
 
-      const device = {
-        key,
-        descricao: description,
-        id: devices.length,
-        principal: false,
-        timestamp: new Date(),
-      };
+      storeData(deviceStorage);
 
-      devices.push(device);
-      storeData(devices);
-
-      setKey('');
       setDescription('');
+      setKey('');
       navigation.navigate('devicesList');
     } catch (e) {
       console.info(e);
@@ -52,11 +47,13 @@ export default function RegisterDevice({ navigation }) {
         style={styles.input}
         value={key}
         onChangeText={setKey}
+        placeholder={item.key}
         labelStyle={{ color: 'black' }}
       />
       <OnboardingInput
         labelStyle={{ color: 'black' }}
         value={description}
+        placeholder={item.descricao}
         onChangeText={setDescription}
         text="Description"
         style={styles.description}
@@ -64,8 +61,8 @@ export default function RegisterDevice({ navigation }) {
       />
       <View style={styles.buttonContainer}>
         <OnboardingButton
-          text="Cadastrar"
-          onPress={async (e) => { await registerDevice(e); }}
+          text="Editar"
+          onPress={async (e) => { await editDevice(e); }}
           style={styles.button}
         />
       </View>

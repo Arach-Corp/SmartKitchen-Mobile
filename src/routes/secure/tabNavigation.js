@@ -79,9 +79,7 @@ export function TabDevice() {
           tabBarIcon: ({ size, focused }) => (
             <MaterialIcons name="add" color={focused ? '#30c735' : 'grey'} size={size} />
           ),
-
         }}
-
       />
     </Tab.Navigator>
   );

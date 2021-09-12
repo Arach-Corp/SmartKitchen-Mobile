@@ -10,7 +10,7 @@ export function Navigation() {
   return (
     <NavigationContainer>
       {
-        !isLoggedIn ? (
+        isLoggedIn ? (
           <PublicNavigation />
         ) : (
           <InternalNavigation />
