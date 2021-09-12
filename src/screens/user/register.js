@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  StyleSheet, View, StatusBar, Dimensions,
+  StyleSheet, View, StatusBar, Dimensions, Alert
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { OnboardingInput } from '../../components/onboardingInput';
@@ -26,34 +26,103 @@ export default function Register({ route, navigation }) {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [errors, setErrors] = useState([]);
+  const validar = () => {
+      let error = false
 
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation && name == ""){
+        Alert.alert("Atenção", "Preencha seu e-mail corretamente. \nAs senhas não conferem!\nO Nome é de preenchimento obrigatório.");
+      }
+      else{
+        if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation){
+          Alert.alert ("Atenção!", "As senhas não conferem!\nO e-mail é inválido!")
+        }
+        else{
+          if (password !== passwordConfirmation && name == ""){
+            Alert.alert("Atenção", "As senhas não conferem!\nO nome é de preenchimento Obrigatório.")
+          }
+            else{
+              if (!re.test(String(email).toLowerCase()) && name == ""){
+                Alert.alert("Atenção", "O e-mail é inválido!\nO nome é de preenchimento obrigatório")
+              }
+              else{
+                if (!re.test(String(email).toLowerCase())){
+                  Alert.alert("Atenção", "O e-mail é inválido!.");
+                }
+                if (password !== passwordConfirmation){
+                  Alert.alert("Atenção", "As senhas não conferem!")
+                }
+                if(name == ""){
+                  Alert.alert("Atenção", "O nome é de preenchimento Obrigatório!")
+                }
+              }
+           }
+        }
+      }
+      return !error
+    }
   async function register(event) {
-    try {
-      if (password !== passwordConfirmation) {
-        const notSamePassword = "The passwords doesn't match";
-        setErrors([...errors, notSamePassword]);
+  if (validar()){
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      try {
+      setErrors([]);
+      if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation && name == ""){
+        const mailPwdNameError = "The Passwords doesn't match and the e-mail is invalid and Name was null"
+        setErrors([mailPwdNameError]);
+      }
+      else{
+        if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation){
+          const mailPwdError = "The Passwords doesn't match and the e-mail is invalid"
+          setErrors([mailPwdError]);
+        }
+        else{
+          if (password !== passwordConfirmation && name == ""){
+            const pwdNameError = "The Passwords doesn't match and Name was null"
+            setErrors([pwdNameError]);
+          }
+            else{
+              if (!re.test(String(email).toLowerCase()) && name == ""){
+                const mailNameError = "The e-mail is invalid and Name was null"
+                setErrors([mailNameError]);
+              }
+              else{
+                if (!re.test(String(email).toLowerCase())){
+                  const mailError = "The e-mail is invalid"
+                  setErrors([mailError]);;
+                }
+                if (password !== passwordConfirmation){
+                  const pwdError = "The Passwords doesn't match"
+                  setErrors([pwdError]);
+                }
+                if(name == ""){
+                  const nameError = "Name was null"
+                  setErrors([nameError]);
+                }
+              }
+           }
+        }
       }
 
-      if (errors.length === 0) {
-        const body = {
-          nome: name,
-          email: email.toLowerCase(),
-          password,
-        };
+        if (errors.length === 0) {
+          const body = {
+            nome: name,
+            email: email.toLowerCase(),
+            password,
+          };
 
-        const response = await axios.post('/auth/register', body);
+          const response = await axios.post('/auth/register', body);
 
-        console.info(`${response.status} - Register request`);
-        console.info(response.data);
-      } else {
-        console.info(`Erros: ${errors}`);
+          console.info(`${response.status} - Register request`);
+          console.info(response.data);
+        } else {
+          console.info(`Erros: ${errors}`);
+        }
+      } catch (error) {
+        console.info(error);
+        console.info(error);
       }
-    } catch (error) {
-      console.info(error);
-      console.info(error);
     }
   }
-
   return (
     <Background>
       <View style={styles.fieldContainer}>
@@ -72,6 +141,8 @@ export default function Register({ route, navigation }) {
           value={email}
           onChangeText={setEmail}
         />
+
+
         <OnboardingInput
           text="Senha"
           secureTextEntry

@@ -1,7 +1,6 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  StyleSheet, View, Text, StatusBar, Dimensions,
+  StyleSheet, View, Text, StatusBar, Dimensions, Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,24 +23,59 @@ export default function Login({ route, navigation }) {
   const state = useSelector((state) => state);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [errorsLogin, setErrorsLogin] = useState([]);
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  const validar = () => {
+    const error = false;
+    if (!re.test(String(email).toLowerCase()) && password == '') {
+      Alert.alert('Atenção', 'Preencha seu e-mail corretamente. \nA senha é de preenchimento obrigatório');
+    } else {
+      if (!re.test(String(email).toLowerCase())) {
+        Alert.alert('Atenção', 'Prencha seu e-mail corretamente.');
+      }
+      if (password == '') {
+        Alert.alert('Atenção', 'A senha é de preenchimento obrigatório!');
+      }
+    }
+    return !error;
+  };
 
   async function login() {
-    try {
-      const response = await axios.post('/auth/login', {
-        email,
-        password,
-      });
-      if (response.status === 200) {
-        await dispatch(actions.loginSuccess({ ...response.data }));
-        axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
-        console.info('Succefully logged in!');
+    if (validar()) {
+      try {
+        setErrorsLogin([]);
+        if (!re.test(String(email).toLowerCase()) && password == '') {
+          const mailPwdErrorLogin = 'Invalid Mail and Null Password';
+          setErrorsLogin([mailPwdErrorLogin]);
+        } else {
+          if (!re.test(String(email).toLowerCase())) {
+            const mailErrorLogin = 'Invalid Mail';
+            setErrorsLogin([mailErrorLogin]);
+          }
+          if (password == '') {
+            const mailErrorLogin = 'NullPassword';
+            setErrorsLogin([mailErrorLogin]);
+          }
+        }
+        if (errorsLogin.length === 0) {
+          const response = await axios.post('/auth/login', {
+            email,
+            password,
+          });
+
+          if (response.status === 200) {
+            await dispatch(actions.loginSuccess({ ...response.data }));
+            axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
+            console.info('Succefully logged in!');
+          }
+        }
+      } catch (e) {
+        console.log(e);
+        dispatch(actions.loginFailure());
       }
-    } catch (e) {
-      console.log(e);
-      dispatch(actions.loginFailure());
     }
   }
-
   return (
     <Background>
       <View style={styles.fieldContainer}>

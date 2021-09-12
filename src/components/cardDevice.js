@@ -18,8 +18,6 @@ export default function CardDevice({
       </View>
       <View style={styles.middleSectionCardContainer}>
         <Text style={styles.deviceName}>
-          Descrição:
-          {' '}
           {description}
         </Text>
         <Text style={styles.creationDate}>
@@ -29,9 +27,9 @@ export default function CardDevice({
         </Text>
       </View>
       <View style={styles.rightSectionCardContainer}>
-        <View style={[styles.tagCardContainer, main ? { backgroundColor: '#30c735' } : { backgroundColor: '#0fbd5a' }]}>
-          <Text style={styles.tagCard}>
-            {main ? 'Principal' : 'Consumido'}
+        <View style={[styles.tagCardContainer, main ? { backgroundColor: '#30c735' } : { backgroundColor: 'grey' }]}>
+          <Text style={[styles.tagCard, main ? { color: '#ccc' } : { color: '#fff' }]}>
+            {main ? 'Principal' : 'Secundário'}
           </Text>
         </View>
       </View>

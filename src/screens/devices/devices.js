@@ -26,9 +26,8 @@ export default function Devices({ navigation, style }) {
     } else {
       (async () => {
         try {
-          const devices = await AsyncStorage.getItem('devices');
-          console.info(devices);
-          setDevices(JSON.parse(devices));
+          const devicesStorage = await AsyncStorage.getItem('devices');
+          setDevices(JSON.parse(devicesStorage));
         } catch (e) {
           console.info(e);
         }
@@ -38,7 +37,10 @@ export default function Devices({ navigation, style }) {
 
   return (
     <SafeAreaView style={style}>
-      <ListDevices data={devices} navigation={navigation} />
+      {
+        devices
+          ? (<ListDevices data={devices} navigation={navigation} />) : (<> </>)
+      }
       <StatusBar style="auto" />
     </SafeAreaView>
   );

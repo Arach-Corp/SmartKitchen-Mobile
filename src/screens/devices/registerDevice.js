@@ -20,8 +20,8 @@ export default function RegisterDevice() {
     };
 
     try {
-      let devices = await AsyncStorage.getItem('devices') || '[]';
-      devices = JSON.parse(devices);
+      let devices = await AsyncStorage.getItem('devices') || [];
+      devices = devices ? JSON.parse(devices) : [];
 
       const device = {
         key,
@@ -59,9 +59,7 @@ export default function RegisterDevice() {
         onChangeText={setDescription}
         text="Description"
         style={styles.description}
-        // eslint-disable-next-line react/jsx-boolean-value
-        multiline={true}
-
+        numberOfLines={10}
       />
       <View style={styles.buttonContainer}>
         <OnboardingButton
@@ -92,8 +90,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   description: {
-    borderRadius: 6,
-    height: 100,
     textAlignVertical: 'top',
   },
   header: {
