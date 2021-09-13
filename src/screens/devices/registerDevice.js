@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Text, SafeAreaView, StyleSheet, View, Dimensions,
+  Text, SafeAreaView, StyleSheet, View, Dimensions, Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { OnboardingInput } from '../../components/onboardingInput';
@@ -9,6 +9,7 @@ import OnboardingButton from '../../components/onboardingButton';
 export default function RegisterDevice({ navigation }) {
   const [description, setDescription] = useState('');
   const [key, setKey] = useState('');
+  const [errors, setErrors] = useState([]);
 
   async function registerDevice() {
     const storeData = async (value) => {
@@ -19,9 +20,16 @@ export default function RegisterDevice({ navigation }) {
       }
     };
 
+    if (!key || !description) {
+      const error = 'Preencha todos os campos';
+      if (!errors.includes(error)) {
+        setErrors([error, ...errors]);
+      }
+    }
+
     try {
-      let devices = await AsyncStorage.getItem('devices') || [];
-      devices = devices ? JSON.parse(devices) : [];
+      let devices = await AsyncStorage.getItem('devices') || '[]';
+      devices = JSON.parse(devices);
 
       const device = {
         key,
@@ -30,15 +38,20 @@ export default function RegisterDevice({ navigation }) {
         principal: false,
         timestamp: new Date(),
       };
-
       devices.push(device);
-      storeData(devices);
+
+      if (!errors) {
+        storeData(devices);
+        navigation.navigate('devicesList');
+      } else {
+        Alert.alert(errors.join('\n '));
+      }
 
       setKey('');
       setDescription('');
-      navigation.navigate('devicesList');
     } catch (e) {
-      console.info(e);
+      console.log('erro');
+      console.log(e);
     }
   }
 

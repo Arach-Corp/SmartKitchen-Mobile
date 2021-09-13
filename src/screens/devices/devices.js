@@ -37,11 +37,7 @@ export default function Devices({ navigation, style }) {
 
   return (
     <SafeAreaView style={style}>
-      {
-        devices
-          ? (<ListDevices data={devices} navigation={navigation} />) : (<> </>)
-      }
-      <StatusBar style="auto" />
+      {devices ? (<ListDevices data={devices} navigation={navigation} />) : (<></>)}
     </SafeAreaView>
   );
 }
