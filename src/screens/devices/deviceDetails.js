@@ -2,28 +2,19 @@ import React, { useState } from 'react';
 import {
   StyleSheet, SafeAreaView, Text, Alert, TouchableOpacity, View,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnboardingButton from '../../components/onboardingButton';
+import axios from '../../service/axios';
 
 export default function DeviceDetails({ route, navigation }) {
   const { item } = route.params;
   const { itemState, setItemState } = useState();
+  const userToken = useSelector((state) => state.authState.userToken);
 
   async function deleteItem() {
     try {
-      const storeData = async (value) => {
-        try {
-          await AsyncStorage.setItem('devices', JSON.stringify(value));
-        } catch (e) {
-          console.info(e);
-        }
-      };
-
-      let devicesStorage = await AsyncStorage.getItem('devices');
-      devicesStorage = JSON.parse(devicesStorage);
-
-      const newDevices = devicesStorage.filter((device) => device.id !== item.id);
-      storeData(newDevices);
+      axios.delete(`/users/dispositivos/${item.id}`, { headers: { Authorization: userToken } });
       navigation.goBack();
     } catch (e) {
       Alert.alert(e);
@@ -76,14 +67,6 @@ export default function DeviceDetails({ route, navigation }) {
         </View>
       </View>
       <View style={styles.buttons}>
-
-        <View style={styles.buttonContainer}>
-          <OnboardingButton
-            text={itemState ? 'Tornar secundário' : 'Tornar principal'}
-            onPress={() => toggleMain()}
-            style={styles.button}
-          />
-        </View>
 
         <View style={styles.buttonContainer}>
           <OnboardingButton

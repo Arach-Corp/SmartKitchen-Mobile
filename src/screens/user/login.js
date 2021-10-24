@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux';
+import Toast from 'react-native-tiny-toast';
 import { OnboardingInput } from '../../components/onboardingInput';
 import OnboardingButton from '../../components/onboardingButton';
 import axios from '../../service/axios';
@@ -25,25 +26,29 @@ export default function Login({ route, navigation }) {
   const [password, setPassword] = React.useState('');
   const [errorsLogin, setErrorsLogin] = useState([]);
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-  const validar = () => {
+  const { height } = Dimensions.get('window');
+  const validate = () => {
     const error = false;
-    if (!re.test(String(email).toLowerCase()) && password == '') {
-      Alert.alert('Atenção', 'Preencha seu e-mail corretamente. \nA senha é de preenchimento obrigatório');
-    } else {
-      if (!re.test(String(email).toLowerCase())) {
-        Alert.alert('Atenção', 'Prencha seu e-mail corretamente.');
-      }
-      if (password == '') {
-        Alert.alert('Atenção', 'A senha é de preenchimento obrigatório!');
-      }
+    if (!re.test(String(email).toLowerCase()) && password === '') {
+      Toast.show('Atenção \n Preencha seu e-mail corretamente. \nA senha é de preenchimento obrigatório');
+      return error;
     }
+    if (!re.test(String(email).toLowerCase())) {
+      Toast.show('Atenção', 'Prencha seu e-mail corretamente.');
+      return error;
+    }
+    if (password == '') {
+      Toast.show('Atenção', 'A senha é de preenchimento obrigatório!');
+      return error;
+    }
+
     return !error;
   };
 
   async function login() {
-    if (validar()) {
+    if (validate()) {
       try {
+        const toast = Toast.show('Carregando...', { loading: true, position: height / 2 });
         setErrorsLogin([]);
         if (!re.test(String(email).toLowerCase()) && password == '') {
           const mailPwdErrorLogin = 'Invalid Mail and Null Password';
@@ -67,11 +72,22 @@ export default function Login({ route, navigation }) {
           if (response.status === 200) {
             await dispatch(actions.loginSuccess({ ...response.data }));
             axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
-            console.info('Succefully logged in!');
+            Toast.showSuccess('Login efetuado com sucesso');
+            Toast.hide(toast);
+          } else if (response.status === 400) {
+            console.log('teste');
           }
         }
       } catch (e) {
-        console.log(e);
+        Toast.hide();
+        switch (e.response.status) {
+          case 400:
+            if (e.response.data.errors.includes('Senha inválida')) { Toast.show('Senha ou e-mail inválido'); }
+            break;
+          default:
+            Toast.show('Falha ao fazer login');
+        }
+
         dispatch(actions.loginFailure());
       }
     }

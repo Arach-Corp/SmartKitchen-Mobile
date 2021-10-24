@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import {
-  StyleSheet, View, StatusBar, Dimensions, Alert
+  StyleSheet, View, StatusBar, Dimensions, Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import Toast from 'react-native-tiny-toast';
 import { OnboardingInput } from '../../components/onboardingInput';
 import { Logo } from '../../components/logo';
 import OnboardingButton from '../../components/onboardingButton';
@@ -25,101 +26,38 @@ export default function Register({ route, navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [errors, setErrors] = useState([]);
-  const validar = () => {
-      let error = false
+  const { height } = Dimensions.get('window');
 
-      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation && name == ""){
-        Alert.alert("Atenção", "Preencha seu e-mail corretamente. \nAs senhas não conferem!\nO Nome é de preenchimento obrigatório.");
-      }
-      else{
-        if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation){
-          Alert.alert ("Atenção!", "As senhas não conferem!\nO e-mail é inválido!")
-        }
-        else{
-          if (password !== passwordConfirmation && name == ""){
-            Alert.alert("Atenção", "As senhas não conferem!\nO nome é de preenchimento Obrigatório.")
-          }
-            else{
-              if (!re.test(String(email).toLowerCase()) && name == ""){
-                Alert.alert("Atenção", "O e-mail é inválido!\nO nome é de preenchimento obrigatório")
-              }
-              else{
-                if (!re.test(String(email).toLowerCase())){
-                  Alert.alert("Atenção", "O e-mail é inválido!.");
-                }
-                if (password !== passwordConfirmation){
-                  Alert.alert("Atenção", "As senhas não conferem!")
-                }
-                if(name == ""){
-                  Alert.alert("Atenção", "O nome é de preenchimento Obrigatório!")
-                }
-              }
-           }
-        }
-      }
-      return !error
-    }
   async function register(event) {
-  if (validar()){
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const toast = Toast.show('Carregando...', { loading: true, position: height / 2 });
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (name.length > 0 && email.length > 0 && password.length > 0 && passwordConfirmation.length > 0 && re.test(email)) {
       try {
-      setErrors([]);
-      if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation && name == ""){
-        const mailPwdNameError = "The Passwords doesn't match and the e-mail is invalid and Name was null"
-        setErrors([mailPwdNameError]);
+        const body = {
+          nome: name,
+          email: email.toLowerCase(),
+          password,
+        };
+        const response = await axios.post('/auth/register', body);
+        Toast.showSuccess('Conta criada com sucesso!');
+        console.log(response);
+        setName('');
+        setEmail('');
+        setPassword('');
+        setPasswordConfirmation('');
+        Toast.hide(toast);
+        navigation.goBack();
+      } catch (e) {
+        let errorsString = '';
+        e.response.data.errors.forEach((error) => { errorsString += `• ${error} \n`; });
+        Toast.hide(toast);
+        Toast.show(errorsString, { position: 150 });
       }
-      else{
-        if (!re.test(String(email).toLowerCase()) && password !== passwordConfirmation){
-          const mailPwdError = "The Passwords doesn't match and the e-mail is invalid"
-          setErrors([mailPwdError]);
-        }
-        else{
-          if (password !== passwordConfirmation && name == ""){
-            const pwdNameError = "The Passwords doesn't match and Name was null"
-            setErrors([pwdNameError]);
-          }
-            else{
-              if (!re.test(String(email).toLowerCase()) && name == ""){
-                const mailNameError = "The e-mail is invalid and Name was null"
-                setErrors([mailNameError]);
-              }
-              else{
-                if (!re.test(String(email).toLowerCase())){
-                  const mailError = "The e-mail is invalid"
-                  setErrors([mailError]);;
-                }
-                if (password !== passwordConfirmation){
-                  const pwdError = "The Passwords doesn't match"
-                  setErrors([pwdError]);
-                }
-                if(name == ""){
-                  const nameError = "Name was null"
-                  setErrors([nameError]);
-                }
-              }
-           }
-        }
-      }
-
-        if (errors.length === 0) {
-          const body = {
-            nome: name,
-            email: email.toLowerCase(),
-            password,
-          };
-
-          const response = await axios.post('/auth/register', body);
-
-          console.info(`${response.status} - Register request`);
-          console.info(response.data);
-        } else {
-          console.info(`Erros: ${errors}`);
-        }
-      } catch (error) {
-        console.info(error);
-        console.info(error);
+    } else {
+      Toast.hide(toast);
+      if (!re.test(email)) { Toast.show('E-mail inválido', { position: 150 }); } else {
+        Toast.show('Preencha todos os campos', { position: 150 });
       }
     }
   }
@@ -141,7 +79,6 @@ export default function Register({ route, navigation }) {
           value={email}
           onChangeText={setEmail}
         />
-
 
         <OnboardingInput
           text="Senha"

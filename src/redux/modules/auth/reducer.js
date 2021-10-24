@@ -11,7 +11,7 @@ export default function AuthReducer(state = initialState, action) {
   switch (action.type) {
     case types.LOGIN_SUCCESS: {
       state.isLoggedIn = true;
-      state.userToken = action.payload.token;
+      state.userToken = `Bearer ${action.payload.token}`;
       return state;
     }
     case types.LOGIN_REQUEST: {

@@ -2,45 +2,50 @@ import React, { useState } from 'react';
 import {
   Text, SafeAreaView, StyleSheet, View, Dimensions,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-tiny-toast';
+import { useSelector } from 'react-redux';
 import { OnboardingInput } from '../../components/onboardingInput';
+import axios from '../../service/axios';
 import OnboardingButton from '../../components/onboardingButton';
 
 export default function EditDevice({ route, navigation }) {
   const [description, setDescription] = useState('');
   const [key, setKey] = useState('');
   const { item } = route.params;
+  const userToken = useSelector((state) => state.authState.userToken);
+  const { height } = Dimensions.get('window');
 
   async function editDevice() {
-    const storeData = async (value) => {
-      try {
-        await AsyncStorage.setItem('devices', JSON.stringify(value));
-      } catch (e) {
-        console.info(e);
-      }
-    };
-
+    const toast = Toast.show('Carregando...', { loading: true, position: height / 2 });
     try {
-      let deviceStorage = await AsyncStorage.getItem('devices');
-      deviceStorage = JSON.parse(deviceStorage);
-      const deviceIndex = deviceStorage.findIndex((device) => device.id === item.id);
-      deviceStorage[deviceIndex].descricao = description;
-      deviceStorage[deviceIndex].key = key;
+      const requestParameters = { body: { key, descricao: description }, header: { headers: { Authorization: userToken } } };
 
-      storeData(deviceStorage);
-
-      setDescription('');
-      setKey('');
-      navigation.navigate('devicesList');
+      if (description.length > 0 && key.length > 0) {
+        const response = await axios.put(`/users/dispositivo/${item.id}`, requestParameters.body, requestParameters.header);
+        console.log('User Token:', userToken);
+        Toast.showSuccess('Dispositivo editado com sucesso!');
+        navigation.navigate('devicesList');
+        setKey('');
+        setDescription('');
+        Toast.hide(toast);
+      } else {
+        Toast.hide(toast);
+        Toast.show('Preencha todos os campos', { position: height / 3 });
+      }
     } catch (e) {
-      console.info(e);
+      console.log('User Token:', userToken);
+      console.log(e.response);
+
+      const errorsString = `• Erro status ${e.response.status} \n`;
+      Toast.hide(toast);
+      Toast.show(errorsString, { position: 150 });
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
 
-      <Text style={styles.header}>Adicionar Dispositivo</Text>
+      <Text style={styles.header}>Editar Dispositivo</Text>
 
       <OnboardingInput
         text="Key"

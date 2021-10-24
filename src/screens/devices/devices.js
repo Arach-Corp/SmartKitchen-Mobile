@@ -10,29 +10,18 @@ export default function Devices({ navigation, style }) {
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
-    if (process.env.DEBUG) {
-      (async () => {
-        const body = {
-          perPage: 0,
-        };
+    (async () => {
+      const body = {
+        perPage: 0,
+      };
 
-        try {
-          const response = await axios.get('/users/dispositivos', body);
-          setDevices(response.data.content);
-        } catch (error) {
-          console.info(error);
-        }
-      })();
-    } else {
-      (async () => {
-        try {
-          const devicesStorage = await AsyncStorage.getItem('devices');
-          setDevices(JSON.parse(devicesStorage));
-        } catch (e) {
-          console.info(e);
-        }
-      })();
-    }
+      try {
+        const response = await axios.get('/users/dispositivos', body);
+        setDevices(response.data.content);
+      } catch (error) {
+        console.info(error);
+      }
+    })();
   });
 
   return (

@@ -2,56 +2,35 @@ import React, { useState } from 'react';
 import {
   Text, SafeAreaView, StyleSheet, View, Dimensions, Alert,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-tiny-toast';
+import { useSelector } from 'react-redux';
 import { OnboardingInput } from '../../components/onboardingInput';
 import OnboardingButton from '../../components/onboardingButton';
+import axios from '../../service/axios';
 
 export default function RegisterDevice({ navigation }) {
   const [description, setDescription] = useState('');
   const [key, setKey] = useState('');
-  const [errors, setErrors] = useState([]);
+  const userToken = useSelector((state) => state.authState.userToken);
+  const { height } = Dimensions.get('window');
 
   async function registerDevice() {
-    const storeData = async (value) => {
-      try {
-        await AsyncStorage.setItem('devices', JSON.stringify(value));
-      } catch (e) {
-        console.info(e);
-      }
-    };
-
-    if (!key || !description) {
-      const error = 'Preencha todos os campos';
-      if (!errors.includes(error)) {
-        setErrors([error, ...errors]);
-      }
-    }
-
+    const toast = Toast.show('Carregando...', { loading: true, position: height / 2 });
     try {
-      let devices = await AsyncStorage.getItem('devices') || '[]';
-      devices = JSON.parse(devices);
+      const requestParameters = { body: { key, descricao: description }, header: { headers: { Authorization: userToken, 'Content-Type': 'application/json' } } };
 
-      const device = {
-        key,
-        descricao: description,
-        id: devices.length,
-        principal: false,
-        timestamp: new Date(),
-      };
-      devices.push(device);
-
-      if (!errors) {
-        storeData(devices);
-        navigation.navigate('devicesList');
-      } else {
-        Alert.alert(errors.join('\n '));
-      }
-
+      const response = await axios.post('/users/dispositivos', requestParameters.body, requestParameters.header);
+      Toast.showSuccess('Dispositivo cadastrado com sucesso!');
+      console.log(response);
+      navigation.navigate('devicesList');
       setKey('');
       setDescription('');
+      Toast.hide(toast);
     } catch (e) {
-      console.log('erro');
-      console.log(e);
+      let errorsString = '';
+      e.response.data.errors.forEach((error) => { errorsString += `• ${error} \n`; });
+      Toast.hide(toast);
+      Toast.show(errorsString, { position: 150 });
     }
   }
 
@@ -71,7 +50,7 @@ export default function RegisterDevice({ navigation }) {
         labelStyle={{ color: 'black' }}
         value={description}
         onChangeText={setDescription}
-        text="Description"
+        text="Descrição"
         style={styles.description}
         numberOfLines={10}
       />
